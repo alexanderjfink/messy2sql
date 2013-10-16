@@ -1,0 +1,3 @@
+*.pyc
+messy2sql.egg-info
+.DS_Store

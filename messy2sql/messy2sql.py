@@ -156,6 +156,7 @@ class Messy2SQL:
 			for cell in row:
 				# need to convert to a string no matter what...
 				# need to add quotes around StringTypes
+				# CONSIDER BORROWING HERE FROM CSVSQL/CVSKIT
 				if cell.type == messytables.StringType:
 					value = '"' + str(cell.value) + '"'
 				elif cell.value == None:
