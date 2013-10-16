@@ -11,6 +11,10 @@ import messytables
 """
 Need a slightly different 'dialect' to be spoken depending on which db type we are
 wanting to insert into
+
+
+NEED TO INCREASE GRANULARITY HERE AND DO SOME GUESSING BASED ON SAMPLING SO WE CAN BE
+EFFICIENT WITH FILE SPACE INSTEAD OF USING FULL SPACE
 """
 MESSYTABLES_TO_SQL_DIALECT_MAPPING = {
 	'mysql': {
@@ -18,7 +22,7 @@ MESSYTABLES_TO_SQL_DIALECT_MAPPING = {
 		# 						'char': 'VARCHAR(255)',
 		# 						'text': 'TEXT',
 		# 					}, 
-		messytables.StringType: 'VARCHAR(255)', # this is temp, return to above when working
+		messytables.StringType: 'TEXT', # this is temp, return to above when working
 		messytables.IntegerType: 'INT',
 		messytables.FloatType: 'FLOAT',
 		messytables.DecimalType: 'DECIMAL',
@@ -26,12 +30,32 @@ MESSYTABLES_TO_SQL_DIALECT_MAPPING = {
 		# messytables.DateUtilType: 'date'
 	},
 	'postgres': {
+		messytables.StringType: 'text', # this is temp, return to above when working
+		messytables.IntegerType: 'integer',
+		messytables.FloatType: 'real',
+		messytables.DecimalType: 'decimal',
+		messytables.DateType: 'timestamp',
 	},
 	'sqlite': {
+		messytables.StringType: 'text', # this is temp, return to above when working
+		messytables.IntegerType: 'integer',
+		messytables.FloatType: 'numeric',
+		messytables.DecimalType: 'numeric',
+		messytables.DateType: 'text',
 	},
 	'sqlserver': {
+		messytables.StringType: 'varchar(255)', # this is temp, return to above when working
+		messytables.IntegerType: 'int',
+		messytables.FloatType: 'float',
+		messytables.DecimalType: 'decimal',
+		messytables.DateType: 'date',
 	},
 	'access': {
+		messytables.StringType: 'memo', # this is temp, return to above when working
+		messytables.IntegerType: 'Integer',
+		messytables.FloatType: 'Double',
+		messytables.DecimalType: 'Double',
+		messytables.DateType: 'Date/Time',
 	}
 }
 

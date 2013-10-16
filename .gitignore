@@ -1,3 +1,4 @@
 *.pyc
 messy2sql.egg-info
+*.tar.gz
 .DS_Store
