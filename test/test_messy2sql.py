@@ -6,7 +6,7 @@ import StringIO
 import nose
 
 # horror_fobj imports test data
-from . import horror_fobj
+from messytables import horror_fobj
 
 from messytables import (CSVTableSet, CSVRowSet, type_guess, headers_guess,
                          offset_processor, DateType, StringType,
