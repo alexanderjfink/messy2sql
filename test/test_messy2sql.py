@@ -14,7 +14,7 @@ from messytables import (CSVTableSet, CSVRowSet, type_guess, headers_guess,
                          DateUtilType)
 
 # isn't being imported by default
-from messy2sql.messy2sql import Messy2SQL, MESSYTABLES_TO_SQL_DIALECT_MAPPING
+from messy2sql import Messy2SQL, MESSYTABLES_TO_SQL_DIALECT_MAPPING
 
 class Messy2SQLTest(unittest.TestCase):
 	def setUp(self):

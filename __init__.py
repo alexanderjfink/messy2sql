@@ -1,1 +1,1 @@
-from messy2sql import *
+from messy2sql.messy2sql import Messy2SQL, MESSYTABLES_TO_SQL_DIALECT_MAPPING
