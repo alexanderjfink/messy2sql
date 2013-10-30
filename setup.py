@@ -7,7 +7,7 @@ Quick add-on to Open Knowledge Foundation's Messytables
 
 setup(
     name='messy2sql',
-    version='0.1.0a1',
+    version='0.1.0a4',
     description="Convert messytables types to SQL create/insert statements",
     long_description=long_desc,
     classifiers=[
@@ -22,7 +22,7 @@ setup(
     author_email='alexanderjfink@gmail.com',
     url='http://publicfragments.org',
     license='MIT',
-    packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
+    packages=find_packages(exclude=['ez_setup', 'test', 'docs']),
     namespace_packages=[],
     include_package_data=False,
     zip_safe=False,
@@ -33,9 +33,10 @@ setup(
         'python-dateutil>=1.5.0,<2.0.0',
         'json-table-schema',
         'lxml>=3.2',
+        'pdftables>=0.0.3',
         'messytables',
     ],
-    extras_require={'pdf': ['pdftables>=0.0.3']},
+    extras_require={},
     tests_require=[],
     entry_points=\
     """

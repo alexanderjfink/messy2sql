@@ -5,7 +5,7 @@ Messy2SQL generates SQL from MessyTypes
 Messy2SQL returns SQL strings 
 """
 
-import os, re
+import os
 import messytables
 
 """
@@ -66,6 +66,7 @@ class Messy2SQL:
 
 	messy_file = ""
 	messytables_to_sql_mapping = {}
+	headers = []
 
 	def __init__(self, messy_file, db_type='postgres', table_name=None):
 		"""
@@ -87,7 +88,6 @@ class Messy2SQL:
 		"""
 		Basic conversion of MessyTables type to SQL typing
 		"""
-
 		# PLACEHOLDER: may need a conditional here to check whether this is a text field, if so, how long?
 		return self.messytables_to_sql_mapping[celltype.__class__]
 
@@ -103,7 +103,9 @@ class Messy2SQL:
 		
 		# we don't care about the offset returned, so just throw it away, get headers
 		_, headers = messytables.headers_guess(rowset.sample)
-		types = map(self.celltype_as_string, messytables.type_guess(rowset.sample))
+		types = map(self.celltype_as_string, messytables.type_guess(rowset.sample, strict=False))
+		
+		self.headers = headers
 
 		return self.headers_and_typed_as_sql(sql_table_name, headers, types)
 
@@ -112,25 +114,13 @@ class Messy2SQL:
 		Returns the actual SQL assembly of the headers & types combined
 		"""
 
+		# TODO: NEED TO MODIFY TO MAKE SURE THAT THERE AREN'T DUPLICATE LABELS
+
 		# Need to iterate over the types found and create a string that will go into the SQL query 
 		# in the form of 'column_name column_type, column_name column_type'
-		insert_string = headers
+		insert_string = ""
 		for i in range(len(headers)):
-			insert_string[i] = headers[i] + " " + types[i]
-
-		# Have to do a few final little things here... namely:
-		# the string comes out looking like this
-		# [u'id int', u'other varchar(255)']
-		# therefore need to remove the unicode designator 'u' and the string quotes ''
-		# needs to end up looking like: id int, other varchar
-		# str() changes the list into one string
-		# first replace() drops the unicode designator. we need u' to make sure we aren't dropping "u" in column names or data types
-		# second replace() drops all the strings ''
-		# strip() removes the brackets around the the list-turned-string
-		insert_string = str(insert_string).replace("u'", "'").replace("'","").strip('[]')
-		
-		# remove any leftover whitespace
-		re.sub(r'\s+', '', insert_string)
+			insert_string += "%s %s, " % (headers[i], types[i])
 		
 		# return create table sql query
 		return "CREATE TABLE %s (%s);" % (table_name, insert_string)
@@ -147,7 +137,7 @@ class Messy2SQL:
 
 		return "CREATE DATABASE %s;" % db_name
 
-	def create_sql_insert(self, rowset, table_name=None):
+	def create_sql_insert(self, rowset, headers=None, table_name=None):
 		"""
 		Use the actual data to create a SQL insert statement for every line...
 		"""
@@ -156,43 +146,51 @@ class Messy2SQL:
 		if not table_name:
 			table_name = self.table_name
 
-		offset, headers = messytables.headers_guess(rowset.sample)
-		# for each row in the table, make an insert row.
-		# add one to begin with content, not the header:
+		# I THINK I ONLY WANT TO TAKE STREAM, FORCE INTO DETECTED TYPES
+		# YEP, JUST NEED TO GET DETECTED TYPES FROM THE HEADERS!
+
+		# if headers aren't specified by user
+		if not headers:
+			headers = self.headers # pull them from the create_sql_table query
+
+		offset, _ = messytables.headers_guess(rowset.sample)
+		# # for each row in the table, make an insert row.
+		# # add one to begin with content, not the header:
 		rowset.register_processor(messytables.offset_processor(offset + 1))
 
-		# guess column types:
-		types = messytables.type_guess(rowset.sample, strict=True)		
+		# # guess column types:
+		# types = messytables.type_guess(rowset.sample, strict=True)		
 		
-		# and tell the row set to apply these types to
-		# each row when traversing the iterator:
-		rowset.register_processor(messytables.types_processor(types))
+		# # and tell the row set to apply these types to
+		# # each row when traversing the iterator:
+		# rowset.register_processor(messytables.types_processor(types))
 
 		# now run some operation on the data:
 		value_rows = ""
-		value = ""
 
 		for row in rowset:
 			
-			# need to build a row
+			# need to start a SQL row
 			value_rows += "("
 
+			i = 0
 			for cell in row:
 				# need to convert to a string no matter what...
-				# need to add quotes around StringTypes
-				# CONSIDER BORROWING HERE FROM CSVSQL/CVSKIT
-				if cell.type == messytables.StringType:
-					value = '"' + str(cell.value) + '"'
+				# need to add quotes around StringTypes specifically
+				
+				# need to force types to headers
+				if str(headers[i]) == "String":
+					value = '"' + str(cell.value.strip()) + '"'
 				elif cell.value == None:
 					value = ""
 				else:
 					value = str(cell.value)
 
-				value_rows += value + ", " 
+				value_rows += value + ", "
+
+				i += 1
 
 			# and end row...
 			value_rows += "), "
 
-		sql_insert = "INSERT INTO %s VALUES %s;" % (table_name, value_rows)
-		print sql_insert
-		return sql_insert
+		return "INSERT INTO %s VALUES %s;" % (table_name, value_rows)
