@@ -1,6 +1,8 @@
 messy2sql
 =========
 
+[![Build Status](https://travis-ci.org/alexanderjfink/messy2sql.png)](https://travis-ci.org/alexanderjfink/messy2sql)
+
 Uses okfn/messytables to generate SQL CREATE database/table and INSERTs from PDFs, text, CSV, and HTML file tables
 
 ## Installation
@@ -14,6 +16,7 @@ Once these are installed, run from the command line: `pip install --pre messy2sq
 messy2sql depends on messytables. Once you've got messytables, you can use messy2sql to create SQL statements.
 
 For example.
+
 
 `
 import messy2sql # automatically imports messytables as dependency
