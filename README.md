@@ -3,6 +3,7 @@ messy2sql
 
 [![Build Status](https://travis-ci.org/alexanderjfink/messy2sql.png)](https://travis-ci.org/alexanderjfink/messy2sql)
 
+
 Uses okfn/messytables to generate SQL CREATE database/table and INSERTs from PDFs, text, CSV, and HTML file tables
 
 ## Installation

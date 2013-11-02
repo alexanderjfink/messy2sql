@@ -122,8 +122,8 @@ class Messy2SQL:
 		for i in range(len(headers)):
 			insert_string += "%s %s, " % (headers[i], types[i])
 		
-		# return create table sql query
-		return "CREATE TABLE %s (%s);" % (table_name, insert_string)
+		# return create table sql query, make sure to remove trailing commas
+		return "CREATE TABLE %s (%s);" % (table_name, insert_string.strip().rstrip(', '))
 
 
 	def create_sql_db(self, db_name=None):
@@ -186,11 +186,11 @@ class Messy2SQL:
 				else:
 					value = str(cell.value)
 
-				value_rows += value + ", "
+				value_rows += value.strip() + ", "
 
 				i += 1
 
 			# and end row...
 			value_rows += "), "
 
-		return "INSERT INTO %s VALUES %s;" % (table_name, value_rows)
+		return "INSERT INTO %s VALUES %s;" % (table_name, value_rows.strip().rstrip(', '))
