@@ -7,6 +7,7 @@ Messy2SQL returns SQL strings
 
 import os
 import messytables
+from dateutil import parser
 
 """
 Need a slightly different 'dialect' to be spoken depending on which db type we are
@@ -178,9 +179,30 @@ class Messy2SQL:
 				# need to convert to a string no matter what...
 				# need to add quotes around StringTypes specifically
 				
+				# gotta reset this so we don't get weird behavior
+				value = ""
+
 				# need to force types to headers
 				if str(headers[i]) == "String":
-					value = '"' + str(cell.value.strip()) + '"'
+					if cell.value:
+						value = '"' + str(cell.value.strip()) + '"'
+				elif str(headers[i]) == "Date":
+					# Use dateutil parse to turn into a python date time regardless of what it comes in as
+					if cell.value:
+						try:
+							value = parser.parse(cell.value)
+						except ValueError:
+							value = None
+
+						# Don't add a bunch of null-ness for times if unnecessary
+						if value and value.time():
+							value = value.strftime('%Y-%m-%d %H:%M:%S')
+						elif value:
+							value = value.strftime('%Y-%m-%d')
+						else:
+							value = cell.value
+					else:
+						value = cell.value
 				elif cell.value == None:
 					value = ""
 				else:
