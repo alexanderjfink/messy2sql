@@ -107,6 +107,7 @@ class Messy2SQL:
 		types = map(self.celltype_as_string, messytables.type_guess(rowset.sample, strict=False))
 		
 		self.headers = headers
+		self.header_types = types
 
 		return self.headers_and_typed_as_sql(sql_table_name, headers, types)
 
@@ -152,7 +153,7 @@ class Messy2SQL:
 
 		# if headers aren't specified by user
 		if not headers:
-			headers = self.headers # pull them from the create_sql_table query
+			headers = self.header_types # pull them from the create_sql_table query
 
 		offset, _ = messytables.headers_guess(rowset.sample)
 		# # for each row in the table, make an insert row.
@@ -181,7 +182,7 @@ class Messy2SQL:
 				
 				# gotta reset this so we don't get weird behavior
 				value = ""
-
+				
 				# need to force types to headers
 				if str(headers[i]) == "String":
 					if cell.value:
