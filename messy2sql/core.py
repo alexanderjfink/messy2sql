@@ -68,6 +68,7 @@ class Messy2SQL:
 	messy_file = ""
 	messytables_to_sql_mapping = {}
 	headers = []
+	header_types = []
 
 	def __init__(self, messy_file, db_type='postgres', table_name=None):
 		"""
@@ -150,12 +151,12 @@ class Messy2SQL:
 
 		# I THINK I ONLY WANT TO TAKE STREAM, FORCE INTO DETECTED TYPES
 		# YEP, JUST NEED TO GET DETECTED TYPES FROM THE HEADERS!
+		offset, _ = messytables.headers_guess(rowset.sample)
 
 		# if headers aren't specified by user
 		if not headers:
-			headers = self.header_types # pull them from the create_sql_table query
+			headers = messytables.type_guess(rowset.sample, strict=False) # grab header types if not specified
 
-		offset, _ = messytables.headers_guess(rowset.sample)
 		# # for each row in the table, make an insert row.
 		# # add one to begin with content, not the header:
 		rowset.register_processor(messytables.offset_processor(offset + 1))
@@ -187,7 +188,7 @@ class Messy2SQL:
 				if str(headers[i]) == "String":
 					if cell.value:
 						value = '"' + str(cell.value.strip()) + '"'
-				elif str(headers[i]) == "Date":
+				elif "Date" in str(headers[i]):
 					# Use dateutil parse to turn into a python date time regardless of what it comes in as
 					if cell.value:
 						try:
