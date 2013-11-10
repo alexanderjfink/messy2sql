@@ -5,9 +5,13 @@ Messy2SQL generates SQL from MessyTypes
 Messy2SQL returns SQL strings 
 """
 
-import os
-import messytables
+# Python standard libraries
+import os, re
 from dateutil import parser
+
+# External libraries
+import messytables
+
 
 """
 Need a slightly different 'dialect' to be spoken depending on which db type we are
@@ -187,7 +191,24 @@ class Messy2SQL:
 				# need to force types to headers
 				if str(headers[i]) == "String":
 					if cell.value:
-						value = '"' + str(cell.value.strip()) + '"'
+						value = str(cell.value.strip())
+
+						Q = '"'
+						re_quoted_items = re.compile(r'" \s* [^"\s] [^"]* \"')
+
+						woqi = re_quoted_items.sub('', value)
+
+						if len(value) == 0:
+							value = Q + value + Q
+						elif len(woqi) > 0 and not (woqi[0] == Q and woqi[-1] == Q):
+							value = Q + value + Q
+						
+						# check start and end of string for quotes
+						# if not (cell.value[0] == '"' or cell.value[0]) == "'":
+						# 	value = '"' + value
+						# if not (cell.value[-1] == '"' or cell.value[-1]) == "'":
+						# 	value = value + '"'
+						
 				elif "Date" in str(headers[i]):
 					# Use dateutil parse to turn into a python date time regardless of what it comes in as
 					if cell.value:
