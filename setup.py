@@ -7,7 +7,7 @@ Quick add-on to Open Knowledge Foundation's Messytables
 
 setup(
     name='messy2sql',
-    version='0.1.0a8',
+    version='0.1.0a9',
     description="Convert messytables types to SQL create/insert statements",
     long_description=long_desc,
     classifiers=[

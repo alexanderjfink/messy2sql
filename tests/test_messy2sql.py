@@ -66,7 +66,6 @@ class Messy2SQLTest(unittest.TestCase):
 		headers = ['Decimal', 'Date', 'Integer', 'Date', 'String']
 		sql_query = self.m2s.create_sql_insert(self.rows, headers=headers)
 		sql_query = re.sub(r'\s+', ' ', sql_query)
-		print sql_query
 
 		self.assertEqual(sql_query, \
 			sql_test_insert, \
@@ -80,9 +79,6 @@ class Messy2SQLTest(unittest.TestCase):
 
 		sql_query = self.m2s.create_sql_insert(self.rows)
 		sql_query = re.sub(r'\s+', ' ', sql_query)
-
-		print sql_query
-
 
 		self.assertEqual(sql_query, \
 			sql_test_insert, \
