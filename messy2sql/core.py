@@ -183,7 +183,7 @@ class Messy2SQL:
 				
 				# gotta reset this so we don't get weird behavior
 				value = ""
-				
+
 				# need to force types to headers
 				if str(headers[i]) == "String":
 					if cell.value:
@@ -214,6 +214,11 @@ class Messy2SQL:
 
 				i += 1
 
+				# ALSO NEED TO DO SOMETHING TO FIX THE DARN DATE INSERTS!
+
+			# remove trailing commas
+			value_rows = value_rows.strip()[:-1]
+			
 			# and end row...
 			value_rows += "), "
 

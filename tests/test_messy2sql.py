@@ -60,7 +60,7 @@ class Messy2SQLTest(unittest.TestCase):
 		"""
 		should fail unless sql statement to create a new table based on CSV executes
 		"""
-		sql_test_insert = """INSERT INTO test VALUES (1, 2012-02-12, 2, 2011-10-02, "hola bueno", ), (2, 2012-02-12, 2, 2011-10-02, "more text here", ), (2.4, 2012-02-12, 1, 2011-05-01, "further text indeed", ), (foo, bar, 1000, , , ), (4.3, , 42, 2012-10-24, "an even greater amount", ), (, 2012-02-12, 21, 2013-12-24, , );"""
+		sql_test_insert = """INSERT INTO test VALUES (1, 2012-02-12, 2, 2011-10-02, "hola bueno"), (2, 2012-02-12, 2, 2011-10-02, "more text here"), (2.4, 2012-02-12, 1, 2011-05-01, "further text indeed"), (foo, bar, 1000, , ), (4.3, , 42, 2012-10-24, "an even greater amount"), (, 2012-02-12, 21, 2013-12-24, );"""
 		print sql_test_insert + "\n"
 
 		headers = ['Decimal', 'Date', 'Integer', 'Date', 'String']
@@ -76,9 +76,7 @@ class Messy2SQLTest(unittest.TestCase):
 		"""
 		should fail unless sql statement to create a new table based on CSV executes
 		"""
-		sql_test_insert = """INSERT INTO test VALUES (1, 2012-02-12, 2, 2011-10-02, "hola bueno", ), (2, 2012-02-12, 2, 2011-10-02, "more text here", ), (2.4, 2012-02-12, 1, 2011-05-01, "further text indeed", ), (foo, bar, 1000, , , ), (4.3, , 42, 2012-10-24, "an even greater amount", ), (, 2012-02-12, 21, 2013-12-24, , );"""
-
-		print sql_test_insert
+		sql_test_insert = """INSERT INTO test VALUES (1, 2012-02-12, 2, 2011-10-02, "hola bueno"), (2, 2012-02-12, 2, 2011-10-02, "more text here"), (2.4, 2012-02-12, 1, 2011-05-01, "further text indeed"), (foo, bar, 1000, , ), (4.3, , 42, 2012-10-24, "an even greater amount"), (, 2012-02-12, 21, 2013-12-24, );"""
 
 		sql_query = self.m2s.create_sql_insert(self.rows)
 		sql_query = re.sub(r'\s+', ' ', sql_query)

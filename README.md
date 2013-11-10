@@ -19,18 +19,17 @@ messy2sql depends on messytables. Once you've got messytables, you can use messy
 For example.
 
 
-`
-import messy2sql # automatically imports messytables as dependency
+`import messy2sql # automatically imports messytables as dependency
 
-rows = CSVTableSet(csv_file).tables[0] # create a MessyTables rowset from a CSV file.
+rows = CSVTableSet(csv_file).tables[0] # create a MessyTables rowset from a CSV file.`
 
-# spin up object
-m2s = Messy2SQL(csv_file, db_type="mysql", table_name="test_table")
+### spin up object
+`m2s = Messy2SQL(csv_file, db_type="mysql", table_name="test_table")
 
 create_db_query = m2s.create_sql_db("test_db")
 create_table_query = m2s.create_sql_table(rows)
 create_insert_query = m2s.create_sql_insert(self.rows)
 
-# Run some code to actually do the database inserts
+#### Run some code to actually do the database inserts
 `
 
